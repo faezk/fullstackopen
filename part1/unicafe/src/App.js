@@ -8,20 +8,25 @@ const Button = ({ onClick, text }) => (
 )
 
 const Statisticline=({text,type})=>(    
-    <div><b>{text}</b>: {type} </div>
-)
+      <tr>
+        <td>{text}</td> 
+        <td>{type}</td>
+      </tr>
+ )
 
 const Statistics = (props) => {  
   if (props.good !== 0 || props.bad !==0 || props.neutral!==0) {
     return (  
-      <div>
+      <table>
+        <tbody>
         <Statisticline text="Good" type={props.good}/>
         <Statisticline text="neutral" type={props.neutral}/>
         <Statisticline text="bad" type={props.bad}/>
         <Statisticline text="All" type={props.allClicks}/>
         <Statisticline text="Avrage" type={props.avrage}/>
         <Statisticline text="positive" type={props.positive}/>
-      </div>
+        </tbody>
+      </table>
     )
   }
   return (    
