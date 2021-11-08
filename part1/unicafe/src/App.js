@@ -1,16 +1,33 @@
 
 import React, { useState } from "react";
 
-
 const Button = ({ onClick, text }) => (
   <button onClick={onClick}>
     {text}
   </button>
 )
+
 const Statisticline=({text,type})=>(    
     <div><b>{text}</b>: {type} </div>
 )
 
+const Statistics = (props) => {  
+  if (props.good !== 0 || props.bad !==0 || props.neutral!==0) {
+    return (  
+      <div>
+        <Statisticline text="Good" type={props.good}/>
+        <Statisticline text="neutral" type={props.neutral}/>
+        <Statisticline text="bad" type={props.bad}/>
+        <Statisticline text="All" type={props.allClicks}/>
+        <Statisticline text="Avrage" type={props.avrage}/>
+        <Statisticline text="positive" type={props.positive}/>
+      </div>
+    )
+  }
+  return (    
+    <h3>No feedback given</h3>    
+  )
+}
 
 const App = () => {
 
@@ -19,7 +36,6 @@ const [neutral, setNeutral] = useState(0)
 const [bad, setBad] = useState(0)
 const [value, setValue] = useState(0)
 const [allClicks, setAll] = useState(0)
-const Isdisplay=((good!==0) || (neutral!==0) || (bad!==0)) ? true:false; 
 
 return (
   <div>
@@ -40,16 +56,7 @@ return (
       setAll(allClicks + 1)}} text="Bad" />
 
       <h1>Statistics</h1>
-       {Isdisplay
-        ?<div>        
-        <Statisticline text="Good" type={good}/>
-        <Statisticline text="neutral" type={neutral}/>
-        <Statisticline text="bad" type={bad}/>
-        <Statisticline text="All" type={allClicks}/>
-        <Statisticline text="Avrage" type={value/allClicks}/>
-        <Statisticline text="positive" type={(good*100 )/allClicks+'%'}/>
-        </div>
-       :<h3>No feedback given</h3>}               
+      <Statistics good={good} bad={bad} neutral={neutral} allClicks={allClicks} avrage={value/allClicks} positive={good*100/allClicks +"%"}/>                
   </div>
 )
 }
