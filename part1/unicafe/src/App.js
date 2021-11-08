@@ -1,69 +1,30 @@
 
 import React, { useState } from "react";
+const App = () => {
+  const anecdotes = [
+    'If it hurts, do it more often',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
+  ]
+   
+  const [selected, setSelected] = useState(0)
 
-const Button = ({ onClick, text }) => (
-  <button onClick={onClick}>
-    {text}
-  </button>
-)
-
-const Statisticline=({text,type})=>(    
-      <tr>
-        <td>{text}</td> 
-        <td>{type}</td>
-      </tr>
- )
-
-const Statistics = (props) => {  
-  if (props.good !== 0 || props.bad !==0 || props.neutral!==0) {
-    return (  
-      <table>
-        <tbody>
-        <Statisticline text="Good" type={props.good}/>
-        <Statisticline text="neutral" type={props.neutral}/>
-        <Statisticline text="bad" type={props.bad}/>
-        <Statisticline text="All" type={props.allClicks}/>
-        <Statisticline text="Avrage" type={props.avrage}/>
-        <Statisticline text="positive" type={props.positive}/>
-        </tbody>
-      </table>
-    )
+  const randomGenerate = () => {
+    const random = Math.floor(Math.random() * anecdotes.length);
+    setSelected(random)
   }
-  return (    
-    <h3>No feedback given</h3>    
+  return (
+    <div>
+      {anecdotes[selected]} 
+      <br/><button onClick={randomGenerate}>next anecdotes</button>
+    </div>
   )
 }
 
-const App = () => {
-
-const [good, setGood] = useState(0)
-const [neutral, setNeutral] = useState(0)
-const [bad, setBad] = useState(0)
-const [value, setValue] = useState(0)
-const [allClicks, setAll] = useState(0)
-
-return (
-  <div>
-    <h1>Feedback here</h1>
-      <Button onClick={() => {
-        setGood(good + 1) 
-        setValue(value + 1) 
-        setAll(allClicks + 1)}} text="Good" />
-
-     <Button onClick={() => {
-      setNeutral(neutral + 1) 
-      setValue(value + 0) 
-      setAll(allClicks + 1)}} text="Neutral" />
-
-     <Button onClick={() => {
-      setBad(bad + 1)
-      setValue(value - 1) 
-      setAll(allClicks + 1)}} text="Bad" />
-
-      <h1>Statistics</h1>
-      <Statistics good={good} bad={bad} neutral={neutral} allClicks={allClicks} avrage={value/allClicks} positive={good*100/allClicks +"%"}/>                
-  </div>
-)
-}
-
 export default App
+
+
