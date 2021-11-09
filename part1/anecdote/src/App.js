@@ -12,21 +12,40 @@ const anecdotes = [
 
 const SelectedAnecdote = ({anecdotes, selected, points}) => (
 <>
+<h1>Anectdote of the day </h1>
 <p>{anecdotes[selected]}</p>
 <p>has {points[selected]} votes</p>
 </>
 )
+const Maxanecdote = ({anecdote, votes}) => (
+  <>
+  <h1>Anectdote with the most votes</h1>
+  <p>{anecdote}</p>
+  <p>has {votes} votes</p>
+  </>
+  )
+
 
 const App = () => {
   const [selected, setSelected] = useState(0)
   // Define a zero-filled array of a desired length.
   const pointlength = new Array(anecdotes.length).fill(0)
   const [points, setPoints] = useState(pointlength)
+  const [highrate, setHightrate] = useState('If it hurts, do it more often')
+  const [hightPoints, setHightPoints] = useState(0)
+  //const max=(Math.max(...points))
 
   const handleVote = () => {  
     const copy = [...points]
     copy[selected]++
+    //console.log(copy)
     setPoints(copy)
+    const pointMax = Math.max(...copy)
+    setHightPoints(pointMax)
+   // console.log(pointMax);
+    const quote = anecdotes[copy.indexOf(pointMax)]
+    setHightrate(quote)
+
   }
 
   const nextAnecdote = () => {
@@ -39,6 +58,7 @@ return (
     <SelectedAnecdote anecdotes={anecdotes} selected={selected} points={points} />
     <button onClick={handleVote}>vote</button>
     <button onClick={nextAnecdote}>next anecdote</button>
+    <Maxanecdote anecdote={highrate} votes={hightPoints} />
   </>
 )
 }
