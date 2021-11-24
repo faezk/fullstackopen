@@ -14,23 +14,15 @@ const App = () => {
   const [filterResults, setFilterresults] = useState(persons);
   
   useEffect(() => {
-    console.log('effect')
     axios
-      .get('http://localhost:3001/persons')
+      .get('http://localhost:3002/persons')
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+  // console.log('render', persons.length, 'persons')
 
-  // React.useEffect(() => {
-  //   const results = persons.filter(person =>
-  //     person.name.toLowerCase().includes(filterTerm)
-  //   );
-  //   setFilterresults(results);
-  // }, [filterTerm]);
- 
 
   const handleNameChange=(event)=>{
       setNewName(event.target.value)   
@@ -64,8 +56,11 @@ const App = () => {
           number: newNumber,
           id: persons.length + 1,
         }
- 
-        setPersons(persons.concat(nameObject))
+        axios
+         .post("http://localhost:3002/persons", nameObject)
+         .then(response => {
+          setPersons(persons.concat(response.data))
+        })
         }
         setNewName('')
         setNewnumber('')
