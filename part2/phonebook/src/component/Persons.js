@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Persons = ({persons,filterTerm,filterResults}) =>{ 
+ 
     return(
     <div>
       <h2>Numbers</h2>
