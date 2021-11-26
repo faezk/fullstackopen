@@ -3,7 +3,7 @@ import React from 'react';
 const Persons = ({persons,handleDelete}) =>{ 
     return(
         
-        <li> {"" + persons.name +" " + persons.number}
+        <li className='personlist'> {"" + persons.name +" " + persons.number}
          <button  onClick = {() => handleDelete(persons.id)}>Delete</button> 
         {/* <button 
             type="button" 
