@@ -4,6 +4,7 @@ import PersonForm from './component/PersonForm'
 import Persons from './component/Persons'
 import Filter from './component/Filter'
 import personsService from './services/persons'
+import personService from './services/persons';
 
 
 const App = () => {
@@ -11,8 +12,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewnumber ] = useState('')
   const [ filterTerm, setFilterterm ] = useState('')
-  const [filterResults, setFilterresults] = useState(persons);
-  
+  const [ showAll, setShowAll ] = useState(false)
+  const [message, setMessage] = useState(null)
   useEffect(() => {
     personsService
     .getAll()
@@ -20,7 +21,7 @@ const App = () => {
       setPersons(initialNotes)
     })
   }, [])
-  // console.log('render', persons.length, 'persons')
+
 
 
   const handleNameChange=(event)=>{
@@ -33,12 +34,44 @@ const App = () => {
 
   const handleChange = (event) => {
     setFilterterm(event.target.value);
+    setShowAll(true)  
 
-    const results = persons.filter(person =>
-      person.name.toLowerCase().includes(filterTerm)
-    );
-    return setFilterresults(results);
   }
+
+		
+ const handleDelete = (id) => {
+  const filteredPerson = persons.filter(person => person.id === id)
+  const personName = filteredPerson[0].name
+  const personId = filteredPerson[0].id
+  if (window.confirm(`Do you really want to delete ${personName} ?`)) {
+    personService
+      .remove(personId)
+      .catch(error => {
+        setMessage('fail')
+        console.log('fail')
+      })
+    // console.log(`${personName} successfully deleted`)
+    setMessage(`${personName} was successfully deleted`)
+ 
+    setTimeout(() => {
+      personsService
+      .getAll()
+      .then(initialNotes => {
+        setPersons(initialNotes)
+      })
+    }, 1000)
+  }
+}
+
+  function Search(filterTerm) {
+    const results = persons.filter(person => person.name.toLowerCase().split(" ").join("").indexOf(filterTerm.toLowerCase()) !== -1);
+    return results;
+  }
+
+
+  const displayToShow = showAll
+	? Search(filterTerm)
+	: persons
   
   
   const addPerson = (event) => {
@@ -68,12 +101,17 @@ const App = () => {
 
   return (
     <div>
+           {/* <Notification message={message} /> */}
       <h2>Phonebook</h2>
       <Filter value={filterTerm} onchange={handleChange}/> 
       <h3>Add a new</h3>
       <PersonForm onSubmit={addPerson} newNameperson={newName} handleName={handleNameChange} newNumberperson={newNumber} handleNumber={handleNumberChange} />      
       <h3>Numbers</h3>
-      <Persons persons={persons} filterTerm={filterTerm} filterResults={filterResults} />
+       <ul>
+          {displayToShow.map((person) =>        
+            <Persons  persons={person} handleDelete={handleDelete} key={person.id}/>
+          )}
+        </ul>
     </div>
   )
 }
