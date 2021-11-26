@@ -14,6 +14,8 @@ const App = () => {
   const [ filterTerm, setFilterterm ] = useState('')
   const [ showAll, setShowAll ] = useState(false)
   const [message, setMessage] = useState(null)
+  let personExist=null
+
   useEffect(() => {
     personsService
     .getAll()
@@ -72,15 +74,30 @@ const App = () => {
   const displayToShow = showAll
 	? Search(filterTerm)
 	: persons
-  
+
+  const changeNumber= id =>{ 
+     const person = persons.find(n => n.id ===id)
+    const changePerson = { ...person,number: newNumber }
+    // console.log(changePerson)
+    personService
+    .update(id, changePerson)
+    .then(returnedPerson => {
+      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+    })
+   }
   
   const addPerson = (event) => {
         event.preventDefault()
         
-        if (persons.some((person) => person.name === newName)) {
-          alert(newName + " is already added to phonebook");
-        
-        } 
+        const personFilter = persons.filter((person) => person.name === newName)
+        personExist=personFilter[0]
+  
+      if(personExist !== null){      
+        if (window.confirm(`${personExist.name}  is already added to phonebook, replace the old number with a new one ?`)) {
+          changeNumber(personExist.id)
+        }
+      } 
+       
         else 
         {
         const nameObject = {
