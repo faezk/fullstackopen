@@ -21,8 +21,8 @@ const App = () => {
   useEffect(() => {
     personsService
     .getAll()
-    .then(initialNotes => {
-      setPersons(initialNotes)
+    .then(initialpersons => {
+      setPersons(initialpersons)
     })
   }, [])
 
@@ -51,24 +51,26 @@ const App = () => {
 	? Search(filterTerm)
 	: persons
 
-  const handleDelete = (id) => {
+  const deletPerson = (id) => {
     const filteredPerson = persons.filter(person => person.id === id)
     const personName = filteredPerson[0].name
     const personId = filteredPerson[0].id
     if (window.confirm(`Do you really want to delete ${personName} ?`)) {
       personsService
         .remove(personId)
+
+        setMessagetype('success')
         setErrorMessage(
           `${personName} was successfully deleted`
         )
-        setMessagetype('success')
-      setTimeout(() => {
-        personsService
-        .getAll()
-        .then(initialNotes => {
-          setPersons(initialNotes)
-        })
-      }, 1000)
+       
+
+        setPersons(persons.filter(n => n.id !== id))
+       setTimeout(() => {
+        setErrorMessage(null)
+        setMessagetype(null)
+      }, 5000)
+      
     }
   }
   
@@ -80,18 +82,22 @@ const App = () => {
     .update(id, changePerson)
     .then(returnedPerson => {
       setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+
+      setMessagetype('success')
       setErrorMessage(`${person.name} was successfully updated`)
       
     })
     .catch((error) => {
-      setErrorMessage(
-        `[ERROR] ${error.response.data.error}`
-      )
       setMessagetype('error')
+      setErrorMessage(
+        ` Information of ${person.name} has already been removed from server`     
+      )
+     
       setTimeout(() => {
         setErrorMessage(null)
         setMessagetype(null)
       }, 5000)
+      console.log(error.response.data)
     })
 
    }
@@ -120,8 +126,9 @@ const App = () => {
         .then(returnedPerson => {
          // console.log(returnedPerson);
           setPersons(persons.concat(returnedPerson))
-          setErrorMessage(`${newName} was successfully added`)
           setMessagetype('success')
+          setErrorMessage(`${newName} was successfully added`)
+          
         })
        .catch(error => {
         setErrorMessage(
@@ -134,11 +141,6 @@ const App = () => {
           }, 5000)
           console.log(error.response.data)
         })
-
-
-
-
-
         }
         setNewName('')
         setNewnumber('')
@@ -154,7 +156,7 @@ const App = () => {
       <h3>Numbers</h3>
        <ul>
           {displayToShow.map((person) =>        
-            <Persons  persons={person} handleDelete={handleDelete} key={person.id}/>
+            <Persons  persons={person} handleDelete={deletPerson} key={person.id}/>
           )}
         </ul>
     </div>
