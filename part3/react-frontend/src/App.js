@@ -136,10 +136,7 @@ const App = () => {
             `[ERROR] ${error.response.data.error}`
           )
           setMessagetype('error')
-          setTimeout(() => {
-            setErrorMessage(null)
-            setMessagetype(null)
-          }, 5000)
+      
           console.log(error.response.data)
         })
          }
